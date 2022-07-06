@@ -27,6 +27,7 @@ private val Context.profileStore: DataStore<Profile> by dataStore(
     serializer = ProfileSerializer
 )
 
+
 class MainActivity : ComponentActivity() {
 
     private lateinit var profileRepository: ProfileRepository
