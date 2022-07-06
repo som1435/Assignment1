@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -16,28 +17,25 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.example.profilecompose.ui.theme.ProfileComposeTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import java.util.regex.Pattern
 
-private val Context.profileStore: DataStore<Profile> by dataStore(
-    fileName = "profile.pb",
-    serializer = ProfileSerializer
-)
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-//    private lateinit var profileRepository: ProfileRepository
+    //    private lateinit var profileRepository: ProfileRepository
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        profileRepository = ProfileRepository(profileStore)
-        val profileViewModel: ProfileViewModel =
-            ProfileViewModelFactory(profileStore).create(ProfileViewModel::class.java)
+//        val profileViewModel: ProfileViewModel =
+//            ProfileViewModelFactory(profileStore).create(ProfileViewModel::class.java)
+
         setContent {
-            ProfileComposeTheme {
-                ProfileScreen(profileViewModel)
-            }
+            ProfileScreen(profileViewModel)
         }
     }
 }
