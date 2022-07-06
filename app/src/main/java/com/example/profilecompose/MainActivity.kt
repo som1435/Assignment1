@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -22,13 +23,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import java.util.regex.Pattern
 
+private val Context.profileStore: DataStore<Profile> by dataStore(
+    fileName = "profile.pb",
+    serializer = ProfileSerializer
+)
 
 class MainActivity : ComponentActivity() {
-
-    private val Context.profileStore: DataStore<Profile> by dataStore(
-        fileName = "profile.pb",
-        serializer = ProfileSerializer
-    )
 
     private lateinit var profileRepository: ProfileRepository
 
@@ -45,14 +45,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ProfileScreen(profileRepository: ProfileRepository) {
-    val name = remember { mutableStateOf("") }
-    val phone = remember { mutableStateOf("") }
-    val email = remember { mutableStateOf("") }
-    val emailError = remember { mutableStateOf(false) }
-    val phoneError = remember { mutableStateOf(false) }
-    val nameError = remember { mutableStateOf(false) }
+    val name = rememberSaveable { mutableStateOf("") }
+    val phone = rememberSaveable { mutableStateOf("") }
+    val email = rememberSaveable { mutableStateOf("") }
+    val emailError = rememberSaveable { mutableStateOf(false) }
+    val phoneError = rememberSaveable { mutableStateOf(false) }
+    val nameError = rememberSaveable { mutableStateOf(false) }
 
-    val enableButtonState = remember {
+    val enableButtonState = rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -140,7 +140,7 @@ fun ProfileScreen(profileRepository: ProfileRepository) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.Black,
                 unfocusedBorderColor = Color(0xFF6200EE),
-                unfocusedLabelColor = Color.Black
+                unfocusedLabelColor = Color.Black,
             )
         )
         Spacer(modifier = Modifier.height(20.dp))
