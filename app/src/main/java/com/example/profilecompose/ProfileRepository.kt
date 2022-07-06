@@ -6,8 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import java.io.IOException
+import javax.inject.Inject
 
-class ProfileRepository(private val profileStore: DataStore<Profile>) {
+class ProfileRepository @Inject constructor(val profileStore: DataStore<Profile>) {
 
     val profileFlow: Flow<Profile> = profileStore.data.catch { exception ->
         if (exception is IOException) {
