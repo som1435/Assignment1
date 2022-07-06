@@ -1,6 +1,5 @@
 package com.example.profilecompose
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
@@ -13,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
@@ -27,24 +25,25 @@ private val Context.profileStore: DataStore<Profile> by dataStore(
     serializer = ProfileSerializer
 )
 
-
 class MainActivity : ComponentActivity() {
 
-    private lateinit var profileRepository: ProfileRepository
+//    private lateinit var profileRepository: ProfileRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        profileRepository = ProfileRepository(profileStore)
+//        profileRepository = ProfileRepository(profileStore)
+        val profileViewModel: ProfileViewModel =
+            ProfileViewModelFactory(profileStore).create(ProfileViewModel::class.java)
         setContent {
             ProfileComposeTheme {
-                ProfileScreen(profileRepository)
+                ProfileScreen(profileViewModel)
             }
         }
     }
 }
 
 @Composable
-fun ProfileScreen(profileRepository: ProfileRepository) {
+fun ProfileScreen(profileViewModel: ProfileViewModel) {
     val name = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
@@ -69,7 +68,7 @@ fun ProfileScreen(profileRepository: ProfileRepository) {
 //    }
 
     LaunchedEffect(context) {
-        profileRepository.profileFlow.collect {
+        profileViewModel.profileFlow.collect {
             name.value = it.name
             phone.value = it.phone
             email.value = it.email
@@ -172,7 +171,7 @@ fun ProfileScreen(profileRepository: ProfileRepository) {
         Button(
             onClick = {
                 scope.launch(Dispatchers.IO) {
-                    profileRepository.saveDetails(name.value, phone.value, email.value)
+                    profileViewModel.saveDetails(name.value, phone.value, email.value)
                 }
                 Toast.makeText(context, "Saved Successfully", Toast.LENGTH_LONG).show()
             },
