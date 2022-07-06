@@ -22,13 +22,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import java.util.regex.Pattern
 
+private val Context.profileStore: DataStore<Profile> by dataStore(
+    fileName = "profile.pb",
+    serializer = ProfileSerializer
+)
 
 class MainActivity : ComponentActivity() {
-
-    private val Context.profileStore: DataStore<Profile> by dataStore(
-        fileName = "profile.pb",
-        serializer = ProfileSerializer
-    )
 
     private lateinit var profileRepository: ProfileRepository
 
